@@ -1,17 +1,27 @@
-package intitutoinnova;
+package institutoinnova;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ControladorAlumno {
 
-    private List<Alumno> listaAlumnos;
+    private ArrayList<Alumno> listaAlumnos;
 
     public ControladorAlumno() {
         listaAlumnos = new ArrayList<>();
     }
 
     public void agregarAlumno(Alumno alumno) {
+
+        for (Alumno a : listaAlumnos) {
+
+            if (a.getNumeroDocumento()
+                    .equals(alumno.getNumeroDocumento())) {
+
+                throw new IllegalArgumentException(
+                        "Ya existe un alumno con ese documento.");
+            }
+        }
+
         listaAlumnos.add(alumno);
     }
 

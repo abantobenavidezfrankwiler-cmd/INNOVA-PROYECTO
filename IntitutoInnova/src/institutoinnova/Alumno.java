@@ -1,4 +1,4 @@
-package intitutoinnova;
+package institutoinnova;
 
 public class Alumno {
 
@@ -7,6 +7,7 @@ public class Alumno {
     private String numeroDocumento;
     private char nivelSocioeconomico;
     private String tipoBeca;
+    private double pension;
 
     public Alumno(String nombre, String tipoDocumento, String numeroDocumento,
             char nivelSocioeconomico, String tipoBeca) {
@@ -16,6 +17,8 @@ public class Alumno {
         setNumeroDocumento(numeroDocumento);
         setNivelSocioeconomico(nivelSocioeconomico);
         setTipoBeca(tipoBeca);
+
+        calcularPension();
     }
 
     public String getNombre() {
@@ -24,10 +27,8 @@ public class Alumno {
 
     public void setNombre(String nombre) {
         if (nombre == null || nombre.trim().isEmpty()) {
-            throw new IllegalArgumentException(
-                    "El nombre no puede estar vacío.");
+            throw new IllegalArgumentException("El nombre no puede estar vacío.");
         }
-
         this.nombre = nombre;
     }
 
@@ -39,7 +40,6 @@ public class Alumno {
 
         if (!tipoDocumento.equalsIgnoreCase("DNI")
                 && !tipoDocumento.equalsIgnoreCase("CRT")) {
-
             throw new IllegalArgumentException(
                     "El documento debe ser DNI o CRT.");
         }
@@ -53,23 +53,19 @@ public class Alumno {
 
     public void setNumeroDocumento(String numeroDocumento) {
 
-        if (numeroDocumento == null
-                || !numeroDocumento.matches("\\d+")) {
-
+        if (!numeroDocumento.matches("\\d+")) {
             throw new IllegalArgumentException(
                     "El documento solo debe contener números.");
         }
 
         if (tipoDocumento.equals("DNI")
                 && numeroDocumento.length() != 8) {
-
             throw new IllegalArgumentException(
-                    "El DNI debe tener exactamente 8 dígitos.");
+                    "El DNI debe tener 8 dígitos.");
         }
 
         if (tipoDocumento.equals("CRT")
                 && numeroDocumento.length() != 11) {
-
             throw new IllegalArgumentException(
                     "El Carné de Residencia Temporal debe tener 11 dígitos.");
         }
@@ -85,12 +81,9 @@ public class Alumno {
 
         nivel = Character.toUpperCase(nivel);
 
-        if (nivel != 'A'
-                && nivel != 'B'
-                && nivel != 'C') {
-
+        if (nivel != 'A' && nivel != 'B' && nivel != 'C') {
             throw new IllegalArgumentException(
-                    "El nivel socioeconómico debe ser A, B o C.");
+                    "El nivel debe ser A, B o C.");
         }
 
         this.nivelSocioeconomico = nivel;
@@ -113,19 +106,40 @@ public class Alumno {
         this.tipoBeca = tipoBeca;
     }
 
+    public double getPension() {
+        return pension;
+    }
+
     public double calcularPension() {
-        return 0;
+
+        double tarifa = 0;
+
+        if (nivelSocioeconomico == 'A') {
+            tarifa = 1000;
+        } else if (nivelSocioeconomico == 'B') {
+            tarifa = 800;
+        } else if (nivelSocioeconomico == 'C') {
+            tarifa = 600;
+        }
+
+        if (tipoBeca.equalsIgnoreCase("Parcial")) {
+            pension = tarifa * 0.50;
+        } else if (tipoBeca.equalsIgnoreCase("Total")) {
+            pension = 0;
+        } else {
+            pension = tarifa;
+        }
+
+        return pension;
     }
 
     @Override
     public String toString() {
 
-        return "Alumno{" +
-                "nombre='" + nombre + '\'' +
-                ", tipoDocumento='" + tipoDocumento + '\'' +
-                ", numeroDocumento='" + numeroDocumento + '\'' +
-                ", nivelSocioeconomico=" + nivelSocioeconomico +
-                ", tipoBeca='" + tipoBeca + '\'' +
-                '}';
+        return "Alumno: " + nombre
+                + " | Documento: " + tipoDocumento + " " + numeroDocumento
+                + " | Nivel: " + nivelSocioeconomico
+                + " | Beca: " + tipoBeca
+                + " | Pension: S/ " + pension;
     }
 }
